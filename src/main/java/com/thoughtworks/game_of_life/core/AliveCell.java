@@ -1,6 +1,6 @@
 package com.thoughtworks.game_of_life.core;
 
-public class AliveCell implements Cell{
+public class AliveCell implements Cell {
 
     @Override
     public boolean isAlive() {

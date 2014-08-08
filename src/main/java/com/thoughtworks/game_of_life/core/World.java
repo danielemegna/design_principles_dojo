@@ -10,20 +10,28 @@ public class World {
     public static final int DEFAULT_WIDTH = 10;
     public static final int DEFAULT_HEIGHT = 10;
 
-
+		CellsFactory cellsFactory;
     Map<Location, Cell> cells;
 
     public World()  {
+				cellsFactory = new CellsFactory();
         cells = initCells();
     }
 
-    public void advance() {
-        Map<Location, Cell> newCells = initCells();
+		private Cell generateNewCellFromCurrent(Cell cell, Location location)
+		{
+			if(cell.willBeAlive(numberOfAliveNeighbours(location)))
+				return new AliveCell();
 
-        for (Location location : allWorldLocations(DEFAULT_WIDTH, DEFAULT_HEIGHT)) {
-            if (cells.get(location).willBeAlive(numberOfAliveNeighbours(location))){
-                newCells.put(location, new AliveCell());
-            }
+			return new DeadCell();
+		}
+
+    public void advance() {
+        Map<Location, Cell> newCells = new HashMap<>();
+
+        for (Location l : allWorldLocations(DEFAULT_WIDTH, DEFAULT_HEIGHT)) {
+						Cell c = cells.get(l);
+            newCells.put(l, this.generateNewCellFromCurrent(c, l));
         }
         cells = newCells;
     }
@@ -48,7 +56,7 @@ public class World {
     private Map<Location,Cell> initCells() {
         Map<Location, Cell> cells = new HashMap<>();
         for (Location location : allWorldLocations(DEFAULT_WIDTH, DEFAULT_HEIGHT)) {
-            cells.put(location, new DeadCell());
+            cells.put(location, cellsFactory.getNewDefaultCell());
         }
         return cells;
     }
