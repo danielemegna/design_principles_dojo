@@ -14,24 +14,21 @@ public class World {
     Map<Location, Cell> cells;
 
     public World()  {
-				cellsFactory = new CellsFactory();
+				cellsFactory = new CellsFactory(
+					new Class[]{ 
+						AliveCell.class,
+						DeadCell.class
+					}
+				);
+
         cells = initCells();
     }
 
-		private Cell generateNewCellFromCurrent(Cell cell, Location location)
-		{
-			if(cell.willBeAlive(numberOfAliveNeighbours(location)))
-				return new AliveCell();
-
-			return new DeadCell();
-		}
-
     public void advance() {
         Map<Location, Cell> newCells = new HashMap<>();
-
         for (Location l : allWorldLocations(DEFAULT_WIDTH, DEFAULT_HEIGHT)) {
-						Cell c = cells.get(l);
-            newCells.put(l, this.generateNewCellFromCurrent(c, l));
+						Cell newCell = cellsFactory.advanceCell(cells, l);
+						newCells.put(l, newCell);
         }
         cells = newCells;
     }
@@ -61,7 +58,7 @@ public class World {
         return cells;
     }
 
-    public int numberOfAliveNeighbours(Location l) {
+    public static int numberOfAliveNeighbours(Location l, Map<Location, Cell> cells) {
         int aliveNeighbours = 0;
 
         for (Location location : l.allNeighbours(DEFAULT_WIDTH, DEFAULT_HEIGHT)){
