@@ -65,13 +65,4 @@ public class World {
         return aliveNeighbours;
     }
 
-		public static Object instantiateClassFromName(String name) {
-			try {
-				Class c = Class.forName("com.thoughtworks.game_of_life.core." + name);
-				return c.newInstance();
-			} catch (Exception ex) {
-				throw new RuntimeException("Error during instantiate " + name + " class --> " + ex.getMessage());
-			}
-		}
-
 }
