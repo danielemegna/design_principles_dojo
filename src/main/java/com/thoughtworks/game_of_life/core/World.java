@@ -47,11 +47,7 @@ public class World {
     }
 
     public boolean isAlive(Location location) {
-        return cells.get(location).isAlive();
-    }
-
-    private Map<Location,Cell> initCells() {
-        Map<Location, Cell> cells = new HashMap<>();
+        return cells.get(location).isAlive(); } private Map<Location,Cell> initCells() { Map<Location, Cell> cells = new HashMap<>();
         for (Location location : allWorldLocations(DEFAULT_WIDTH, DEFAULT_HEIGHT)) {
             cells.put(location, cellsFactory.getNewDefaultCell());
         }
@@ -68,5 +64,14 @@ public class World {
         }
         return aliveNeighbours;
     }
+
+		public static Object instantiateClassFromName(String name) {
+			try {
+				Class c = Class.forName("com.thoughtworks.game_of_life.core." + name);
+				return c.newInstance();
+			} catch (Exception ex) {
+				throw new RuntimeException("Error during instantiate " + name + " class --> " + ex.getMessage());
+			}
+		}
 
 }
